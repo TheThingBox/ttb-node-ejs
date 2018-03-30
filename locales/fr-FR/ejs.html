@@ -1,0 +1,15 @@
+<script type="text/x-red" data-help-name="ejs">
+  <p>Crée un nouveau 'payload' basé sur le template donné.</p>
+  <p>Il utilise la norme <i><a href="https://github.com/visionmedia/ejs" target="_new">EJS</a></i>.</p>
+  <p>Par exemple, quand le template suivant :</p>
+  <pre>Bonjour <%= name %>. On est <%= date %>.</pre>
+  <p>reçoit le message suivant :</p>
+  <pre>
+{
+  name: "Fred",
+  date: "Lundi"
+  payload: ...
+}</pre>
+  <p>Le résultat sera le suivant :</p>
+  <pre>Bonjour Fred. On est Lundi.</pre>
+</script>

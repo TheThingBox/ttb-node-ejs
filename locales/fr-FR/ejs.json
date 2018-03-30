@@ -1,0 +1,9 @@
+{
+  "ejs": {
+    "name": "Nom",
+    "ejs": {
+      "label": "EJS",
+      "value": "Ceci est le payload: <%= payload %>!"
+    }
+  }
+}

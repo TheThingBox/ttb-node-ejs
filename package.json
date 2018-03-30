@@ -1,0 +1,20 @@
+{
+  "name": "ttb-node-ejs",
+  "version": "0.0.1",
+  "description": "Creates a new payload based on the provided template.",
+  "node-red": {
+    "nodes": {
+      "ejs": "ejs.js"
+    }
+  },
+  "dependencies": {
+    "ejs": "2.5.8"
+  },
+  "keywords": [
+    "node-red",
+    "ejs",
+    "template"
+  ],
+  "author": "http://www.digitalairways.com/",
+  "license": "http://www.wtfpl.net"
+}
