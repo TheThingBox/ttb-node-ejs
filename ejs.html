@@ -7,9 +7,8 @@
   <div class="form-row">
     <label for="node-input-ejs"><i class="icon-wrench"></i> <span data-i18n="ejs.ejs.label"></span></label>
     <input type="hidden" id="node-input-ejs" autofocus="autofocus">
-    <div style="height: 250px;" class="node-text-editor" id="node-input-ejs-editor"></div>
+    <div style="height: 250px; min-height: 150px;" class="node-text-editor" id="node-input-ejs-editor"></div>
   </div>
-
 </script>
 
 <script type="text/x-red" data-help-name="ejs">
@@ -31,12 +30,12 @@
 </script>
 
 <script type="text/javascript">
-  RED.nodes.registerType('ejs',{
-    color:"#eee",
+  RED.nodes.registerType('ejs', {
+    color: "#eee",
     category: 'function',
     defaults: {
       name: {value:""},
-      ejs: {value:"msg.payload = <%= payload %>;"}
+      ejs: {value:"<pre>Hello <%= name %>. Today is <%= date %></pre>"}
     },
     inputs:1,
     outputs:1,
@@ -45,42 +44,40 @@
       return this.name||"ejs";
     },
     oneditprepare: function() {
-
-      function templateDialogResize(ev,ui) {
-        $("#node-input-ejs-editor").css("height",(ui.size.height-200)+"px");
-      };
-
-      $("#dialog").on("dialogresize", templateDialogResize);
-      $("#dialog").one("dialogopen", function(ev) {
-        var size = $( "#dialog" ).dialog('option','sizeCache-template');
-        if (size) {
-          templateDialogResize(null,{size:size});
-        }
-      });
-      $( "#dialog" ).one("dialogclose", function(ev,ui) {
-        var height = $( "#dialog" ).dialog('option','height');
-        $( "#dialog" ).off("dialogresize",templateDialogResize);
+      this.editor = RED.editor.createEditor({
+        id: 'node-input-ejs-editor',
+        mode: 'ace/mode/markdown',
+        value: $("#node-input-ejs").val()
       });
 
-      var that = this;
-      require(["orion/editor/edit"], function(edit) {
-        that.editor = edit({
-          parent:document.getElementById('node-input-ejs-editor'),
-          lang:"html",
-          contents: $("#node-input-ejs").val()
-        });
-        RED.library.create({
-          url:"ejs", // where to get the data from
-          type:"ejs", // the type of object the library is for
-          editor:that.editor, // the field name the main text body goes to
-          fields:['name']
-        });
-        $("#node-input-name").focus();
+      RED.library.create({
+        url:"ejs", // where to get the data from
+        type:"ejs", // the type of object the library is for
+        editor:this.editor, // the field name the main text body goes to
+        mode:"ace/mode/markdown",
+        fields:['name']
       });
+      this.editor.focus();
     },
     oneditsave: function() {
-      $("#node-input-ejs").val(this.editor.getText())
+      $("#node-input-func").val(this.editor.getValue());
+      this.editor.destroy();
       delete this.editor;
+    },
+    oneditcancel: function() {
+      this.editor.destroy();
+      delete this.editor;
+    },
+    oneditresize: function(size) {
+      var rows = $("#dialog-form>div:not(.node-text-editor-row)");
+      var height = $("#dialog-form").height();
+      for (var i=0; i<rows.size(); i++) {
+        height -= $(rows[i]).outerHeight(true);
+      }
+      var editorRow = $("#dialog-form>div.node-text-editor-row");
+      height -= (parseInt(editorRow.css("marginTop"))+parseInt(editorRow.css("marginBottom")));
+      $(".node-text-editor").css("height",height+"px");
+      this.editor.resize();
     }
   });
 
